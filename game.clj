@@ -1,18 +1,22 @@
-(def lower (atom 1))
-(def upper (atom 100))
+(def lower-bound (atom nil))
+(def upper-bound (atom nil))
+(def current-guess (atom nil))
 
 (defn start [n m]
-  (reset! lower n)
-  (reset! upper m)
+  (reset! lower-bound n)
+  (reset! upper-bound m)
+  (reset! current-guess (quot (+ n m) 2))
   "Я готов...")
 
 (defn guess-my-number []
-  (quot (+ @lower @upper) 2))
+  @current-guess)
 
 (defn smaller []
-  (swap! upper (fn [_] (dec (guess-my-number))))
-  (guess-my-number))
+  (swap! upper-bound (fn [_] (dec @current-guess)))
+  (swap! current-guess (fn [_] (quot (+ @lower-bound @upper-bound) 2)))
+  @current-guess)
 
 (defn bigger []
-  (swap! lower (fn [_] (inc (guess-my-number))))
-  (guess-my-number))
+  (swap! lower-bound (fn [_] (inc @current-guess)))
+  (swap! current-guess (fn [_] (quot (+ @lower-bound @upper-bound) 2)))
+  @current-guess)
